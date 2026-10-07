@@ -6,222 +6,29 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body class="bg-light">
+    <div class="container my-5" style="max-width: 600px;">
 
-    <div class="container my-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 text-dark fw-bold">Listagem Geral de Dados</h1>
+        <!-- Botão de Voltar ao Início -->
+        <div class="mb-3">
             <a href="{{ url_for('index') }}" class="btn btn-outline-dark btn-sm">← Voltar ao Início</a>
         </div>
 
-        <!-- Clientes -->
-        <div class="card shadow-sm mb-4">
+        <!-- Container Corpo -->
+        <div class="card shadow-sm">
 
             <!-- Bloco de Título -->
-            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <h2 class="h5 mb-0">Clientes</h2>
-
-                <!-- Botões - Bloco de Título -->
-                <div class="d-flex align-items-center gap-2">
-
-                    <!-- Dropdown - Ordenar por -->
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="btnDropdownClientes" data-bs-toggle="dropdown" aria-expanded="false">Ordenar por</button>
-                        <ul class="dropdown-menu" aria-labelledby="btnDropdownClientes">
-                            <li><a class="dropdown-item" href="#" onclick="ordernarClientes('id')">ID</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="ordenarClientes('nome')">Cliente</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Button Toggle - Crescente/Decrescente -->
-                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
-
-                        <input type="radio" class="btn-check" name="ordem_cliente" id="cliente_crescente" autocomplete="off" checked>
-                        <label class="btn btn-outline-primary" for="cliente_crescente">Crescente</label>
-
-                        <input type="radio" class="btn-check" name="ordem_cliente" id="cliente_decrescente" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="cliente_decrescente">Decrescente</label>
-                    </div>
+            <div class="card shadow-sm" >
+                <div class="card-header bg-dark text-white">
+                    <h1 class="h5 mb-0">Escolha o que deseja listar</h1>
                 </div>
             </div>
 
-            <!-- Tabela de Exibição -->
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover mb-0 align-middle" border="1px solid black">
-                        <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Cliente</th>
-                                <th>E-mail</th>
-                                <th>Telefone</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for cliente in clientes %}
-                            <tr>
-                                <td>{{ cliente.id_cliente }}</td>
-                                <td>{{ cliente.nome_cliente }}</td>
-                                <td>{{ cliente.email }}</td>
-                                <td>{{ cliente.telefone }}</td>
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <td colspan="4" class="text-center text-muted py-3">Nenhum cliente registado.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Produtos -->
-        <div class="card shadow-sm mb-4">
-
-            <!-- Bloco de Título -->
-            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <h2 class="h5 mb-0">Produtos</h2>
-
-                <!-- Botões - Bloco de Título -->
-                <div class="d-flex align-items-center gap-2">
-
-                    <!-- Dropdown - Ordenar por -->
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="btnDropdownProdutos" data-bs-toggle="dropdown" aria-expanded="false">Ordenar por</button>
-                        <ul class="dropdown-menu" aria-labelledby="btnDropdownProdutos">
-                            <li><a class="dropdown-item" href="#" onclick="ordenarProdutos('id')">ID</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="ordenarProdutos('nome')">Produto</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="ordenarProdutos('preço')">Preço</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Button Toggle - Crescente/Decrescente -->
-                     <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
-
-                        <input type="radio" class="btn-check" name="ordem_produto" id="produto_crescente" autocomplete="off" checked>
-                        <label class="btn btn-outline-primary" for="produto_crescente">Crescente</label>
-
-                        <input type="radio" class="btn-check" name="ordem_produto" id="produto_decrescente" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="produto_decrescente">Decrescente</label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tabela de Exibição -->
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover mb-0 align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>Preço</th>
-                                <th>Estoque</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for produto in produtos %}
-                            <tr>
-                                <td>{{ produto.id_produto }}</td>
-                                <td>{{ produto.nome_produto }}</td>
-                                <td>R$ {{ produto.preco_produto }}</td>
-                                <td>{{ produto.estoque }}</td>
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <td colspan="4" class="text-center text-muted py-3">Nenhum produto registado.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Vendas -->
-        <div class="card shadow-sm mb-4">
-
-            <!-- Bloco de Título -->
-            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <h2 class="h5 mb-0">Vendas</h2>
-
-                <!-- Botões - Bloco de Título -->
-                <div class="d-flex align-items-center gap-2">
-
-                    <!-- Dropdown - Ordenar por -->
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="btnDropdownVendas" data-bs-toggle="dropdown" aria-expanded="false">Ordenar por</button>
-                        <ul class="dropdown-menu" aria-labelledby="btnDropdownVendas">
-                            <li><a class="dropdown-item" href="#">ID</a></li>
-                            <li><a class="dropdown-item" href="#">Cliente</a></li>
-                            <li><a class="dropdown-item" href="#">Produto</a></li>
-                            <li><a class="dropdown-item" href="#">Detalhes</a></li>
-                            <li><a class="dropdown-item" href="#">Valor</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Button Toggle - Crescente/Decrescente -->
-                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
-
-                        <input type="radio" class="btn-check" name="ordem_venda" id="vendas_crescente" autocomplete="off" checked>
-                        <label class="btn btn-outline-primary" for="vendas_crescente">Crescente</label>
-
-                        <input type="radio" class="btn-check" name="ordem_venda" id="vendas_decrescente" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="vendas_decrescente">Decrescente</label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tabela de Exibição -->
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover mb-0 align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Cliente</th>
-                                <th>Produto</th>
-                                <th>Detalhes</th>
-                                <th>Valor</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for venda in vendas %}
-                            <tr>
-                                <td>{{ venda.id_venda }}</td>
-                                <td>{{ venda.cliente }}</td>
-                                <td>{{ venda.produto }}</td>
-                                <td>{{ venda.detalhes }}</td>
-                                <td>{{ venda.valor }}</td>
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <td colspan="4" class="text-center text-muted py-3">Nenhuma venda registada.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+            <div class="card-body p-4 d-grid gap-2">
+                <a href="{{ url_for('listar_clientes') }}" class="btn btn-dark">Listar Clientes</a>
+                <a href="{{ url_for('listar_produtos') }}" class="btn btn-dark">Listar Produtos</a>
+                <a href="{{ url_for('listar_vendas') }}" class="btn btn-dark">Listar Vendas</a>
             </div>
         </div>
     </div>
-
-    <!-- Script do Bootstrap sem restrições de integridade -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function ordenarClientes(campo) {
-            const decrescente = document.getElementById('cliente_decrescente').checked;
-            const direcao = decrescente ? 'desc' : 'asc'
-
-            window.location.href = "{{ url_for('read') }}?ordenarCli=" + campo + "&direcaoCli=" + direcao;
-        }
-
-        function ordenarProdutos(campo) {
-            const decrescente = document.getElementById('produto_decrescente').checked;
-            const direcao = decrescente ? 'desc' : 'asc'
-
-            window.location.href = "{{ url_for('read') }}?ordenarProd=" + campo + "&direcaoProd=" + direcao;
-        }
-    </script>
 </body>
 </html>
