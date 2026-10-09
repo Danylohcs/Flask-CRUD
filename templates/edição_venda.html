@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Venda #{{ venda.id_venda }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+    <div class="container my-5" style="max-width: 800px;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 text-dark fw-bold">Editar Pedido #{{ venda.id_venda }}</h1>
+            <a href="{{ url_for('editar_vendas') }}" class="btn btn-outline-dark btn-sm">← Voltar</a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="POST">
+                    <!-- Seleção do Cliente -->
+                    <div class="mb-3">
+                        <label for="id_cliente" class="form-label fw-bold">Cliente</label>
+                        <select class="form-select" id="id_cliente" name="id_cliente" required>
+                            {% for cliente in clientes %}
+                            <option value="{{ cliente.id_cliente }}" {% if cliente.id_cliente == venda.id_cliente %}selected{% endif %}>
+                                {{ cliente.nome_cliente }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h5 class="fw-bold mb-3">Itens do Pedido</h5>
+
+                    <!-- Container onde ficam as linhas dos produtos -->
+                    <div id="itens-container">
+                        {% for item in venda.itens %}
+                        <div class="row g-2 align-items-center mb-2 item-row">
+                            <div class="col-md-7">
+                                <select name="produto_id[]" class="form-select produto-select" required>
+                                    <option value="" disabled>Selecione um produto</option>
+                                    {% for produto in produtos %}
+                                    <option value="{{ produto.id_produto }}" data-preco="{{ produto.preco_produto }}" {% if produto.id_produto == item.id_produto %}selected{% endif %}>
+                                        {{ produto.nome_produto }} (R$ {{ "%.2f"|format(produto.preco_produto) }} - Stock: {{ produto.estoque }})
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" name="quantidade[]" class="form-control quantidade-input" value="{{ item.quantidade_produto }}" min="1" required>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <button type="button" class="btn btn-outline-danger btn-sm w-100 remover-linha">Remover</button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Botão para adicionar mais produtos dinamicamente -->
+                    <button type="button" id="adicionar-item" class="btn btn-outline-success btn-sm mt-2">+ Adicionar Outro Produto</button>
+
+                    <div class="mb-3 mt-4">
+                        <label for="detalhes" class="form-label fw-bold">Observações / Detalhes</label>
+                        <textarea class="form-control" id="detalhes" name="detalhes" rows="2">{{ venda.detalhes }}</textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a href="{{ url_for('editar_vendas') }}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script para adicionar/remover linhas dinamicamente -->
+    <script>
+        document.getElementById('adicionar-item').addEventListener('click', function() {
+            const container = document.getElementById('itens-container');
+            const primeiraLinha = container.querySelector('.item-row');
+            const novaLinha = primeiraLinha.cloneNode(true);
+
+            // Limpa os valores da nova linha clonada
+            novaLinha.querySelector('.quantidade-input').value = 1;
+            novaLinha.querySelector('.produto-select').selectedIndex = 0;
+
+            container.appendChild(novaLinha);
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('remover-linha')) {
+                const linhas = document.querySelectorAll('.item-row');
+                if (linhas.length > 1) {
+                    e.target.closest('.item-row').remove();
+                } else {
+                    alert('O pedido precisa ter pelo menos um produto.');
+                }
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

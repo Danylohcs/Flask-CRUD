@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Dados</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body class="bg-light">
+    <div class="container my-5" style="max-width: 600px;">
+
+        <!-- Botão de Voltar ao Início -->
+        <div class="mb-3">
+            <a href="{{ url_for('index') }}" class="btn btn-outline-dark btn-sm">← Voltar ao Início</a>
+        </div>
+
+        <!-- Container Corpo -->
+        <div class="card shadow-sm">
+
+            <!-- Bloco de Título -->
+            <div class="card shadow-sm" >
+                <div class="card-header bg-dark text-white">
+                    <h1 class="h5 mb-0">Escolha o que deseja registrar</h1>
+                </div>
+            </div>
+
+            <div class="card-body p-4 d-grid gap-2">
+                <a href="{{ url_for('registrar_cliente') }}" class="btn btn-dark">Registrar Cliente</a>
+                <a href="{{ url_for('registrar_produto') }}" class="btn btn-dark">Registrar Produto</a>
+                <a href="{{ url_for('registrar_venda') }}" class="btn btn-dark">Registrar Venda</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

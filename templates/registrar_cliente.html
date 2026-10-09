@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Cliente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body class="bg-light">
+    <div class="container my-5" style="max-width: 600px;">
+
+        <!-- Botão de Voltar ao Início -->
+        <div class="mb-3">
+            <a href="{{ url_for('registro_dados') }}" class="btn btn-outline-dark btn-sm">← Voltar</a>
+        </div>
+
+        <!-- Container Corpo -->
+        <div class="card shadow-sm">
+
+            <!-- Bloco de Título -->
+            <div class="card-header bg-dark text-white ">
+                <h1 class="h5 mb-0">Registrar Cliente</h1>
+            </div>
+
+            <!-- Form -->
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('registrar_cliente') }}">
+
+                    <!-- Nome -->
+                    <div class="mb-3">
+                        <label for="nomeClienteForm" class="form-label">Nome:</label>
+                        <input type="text" class="form-control" id="nomeClienteForm" name="nomeClienteForm" placeholder="Digite o nome do cliente" required>
+                    </div>
+
+                    <!-- E-mail -->
+                    <div class="mb-3">
+                        <label for="emailForm" class="form-label">E-mail:</label>
+                        <input type="email" class="form-control" id="emailForm" name="emailForm" placeholder="exemplo@email.com" required>
+                    </div>
+
+                    <!-- Telefone -->
+                    <div class="mb-3">
+                        <label for="telefoneForm" class="form-label">Telefone:</label>
+                        <input type="text" class="form-control" id="telefoneForm" name="telefoneForm" placeholder="(00) 00000-0000">
+                    </div>
+
+                    <!-- Botão de Registrar -->
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-dark">Registrar</button>
+                    </div>
+
+                    <!-- Modal do Submit -->
+                    <div class="modal fade" id="ModalCli" tabindex="-1" aria-labelledby="submitModal" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="ModalTitulo">Cliente Registrado</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    O cliente foi registrado com sucesso!
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script do Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    {% if sucesso %}
+    <script>
+        var meuModal = new bootstrap.Modal(document.getElementById('ModalCli'));
+        meuModal.show();
+    </script>
+    {% endif %}
+</body>
+</html>

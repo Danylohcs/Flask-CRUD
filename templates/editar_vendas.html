@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Edição de Vendas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+    <div class="container my-5" style="max-width: 1000px;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 text-dark fw-bold">Edição de Vendas</h1>
+            <a href="{{ url_for('editar_dados') }}" class="btn btn-outline-dark btn-sm">← Voltar</a>
+        </div>
+
+        <!-- Card principal da Tabela -->
+        <div class="card shadow-sm">
+
+            <!-- Bloco de Título e Controles de Ordenação -->
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <h2 class="h5 mb-0">Listagem de Vendas</h2>
+
+                <!-- Controles de Ordenação -->
+                <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex flex-column">
+                        <label class="form-label text-white fw-bold mb-1" style="font-size: 0.8rem;">Ordenar por:</label>
+                        <!-- Dropdown -->
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-primary dropdown-toggle d-flex justify-content-between align-items-center" type="button" id="btnDropdownVendas" data-bs-toggle="dropdown" aria-expanded="false" style="min-width: 120px;">
+                                ID
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="btnDropdownVendas">
+                                <li><a class="dropdown-item" href="#" onclick="ordenarVendas('id')">ID</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="ordenarVendas('cliente')">Cliente</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="ordenarVendas('valor')">Valor</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="ordenarVendas('quantidade')">Qtd. de Prod.</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="ordenarVendas('data')">Data</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Button Toggle - Crescente/Decrescente -->
+                    <div class="d-flex flex-column">
+                        <label class="form-label text-white fw-bold mb-1" style="font-size: 0.8rem;">Sentido:</label>
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+                            <input type="radio" class="btn-check" name="ordem_venda" id="venda_crescente" autocomplete="off" checked>
+                            <label class="btn btn-outline-primary" for="venda_crescente">Crescente</label>
+
+                            <input type="radio" class="btn-check" name="ordem_venda" id="venda_decrescente" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="venda_decrescente">Decrescente</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Vendas em formato de Lista -->
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0 align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Data</th>
+                                <th>Produtos</th>
+                                <th class="text-end">Valor Total</th>
+                                <th class="text-center" style="width: 150px;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for venda in vendas %}
+                            <tr>
+                                <td>{{ venda.id_venda }}</td>
+                                <td>{{ venda.cliente.nome_cliente if venda.cliente else 'Cliente não encontrado' }}</td>
+                                <td>{{ venda.data_venda.strftime('%d/%m/%Y') }}</td>
+                                <td>
+                                    <!-- Lista compacta com os produtos comprados nesta venda -->
+                                    <ul class="list-unstyled mb-0" style="font-size: 0.9rem;">
+                                        {% for item in venda.itens %}
+                                        <li>• {{ item.produto.nome_produto }} <span class="text-muted">(x{{ item.quantidade_produto }})</span></li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                                <td class="text-end fw-bold text-success">R$ {{ "%.2f"|format(venda.valor_total) }}</td>
+                                <td class="text-center">
+                                    <!-- Botão para abrir o Modal de Visualização Completa -->
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalPedido{{ venda.id_venda }}" title="Ver Detalhes">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <!-- Botão Editar -->
+                                    <a href="{{ url_for('editar_venda_form', id=venda.id_venda) }}" class="btn btn-outline-primary btn-sm" title="Editar">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <!-- Botão Excluir -->
+                                    <a href="{{ url_for('excluir_venda', id=venda.id_venda) }}" class="btn btn-outline-danger btn-sm" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta venda?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">Nenhuma venda registrada até o momento.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modais de Detalhes por Venda -->
+    {% for venda in vendas %}
+    <div class="modal fade" id="modalPedido{{ venda.id_venda }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title">Detalhes do Pedido #{{ venda.id_venda }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-1"><strong>Cliente:</strong> {{ venda.cliente.nome_cliente if venda.cliente else 'N/D' }}</p>
+                    <p class="mb-3"><strong>Data:</strong> {{ venda.data_venda.strftime('%d/%m/%Y') }}</p>
+
+                    <h6 class="fw-bold mb-2">Produtos Comprados:</h6>
+                    <ul class="list-group mb-3">
+                        {% for item in venda.itens %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ item.produto.nome_produto }}</strong><br>
+                                <small class="text-muted">Qtd: {{ item.quantidade_produto }} x R$ {{ "%.2f"|format(item.produto.preco_produto) }}</small>
+                            </div>
+                            <span class="fw-bold">R$ {{ "%.2f"|format(item.quantidade_produto * item.produto.preco_produto) }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    {% if venda.detalhes %}
+                    <p class="small text-muted mb-2"><strong>Observações:</strong> {{ venda.detalhes }}</p>
+                    {% endif %}
+
+                    <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded">
+                        <span class="fw-bold">Total da Venda:</span>
+                        <span class="fs-5 fw-bold text-success">R$ {{ "%.2f"|format(venda.valor_total) }}</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Script de Ordenação e Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const direcao = urlParams.get('direcaoVenda');
+            const campo = urlParams.get('ordenarVenda');
+
+            if (direcao === 'desc') {
+                document.getElementById('venda_decrescente').checked = true;
+            } else {
+                document.getElementById('venda_crescente').checked = true;
+            }
+
+            const btnDropdown = document.getElementById('btnDropdownVendas');
+
+            if (campo === 'cliente') {
+                btnDropdown.textContent = 'Cliente';
+            } else if (campo === 'valor') {
+                btnDropdown.textContent = 'Valor';
+            } else if (campo === 'quantidade') {
+                btnDropdown.textContent = 'Qtd. de Prod.';
+            } else if (campo === 'data') {
+                btnDropdown.textContent = 'Data';
+            } else {
+                btnDropdown.textContent = 'ID';
+            }
+        });
+
+        function ordenarVendas(campo) {
+            const decrescente = document.getElementById('venda_decrescente').checked;
+            const direcao = decrescente ? 'desc' : 'asc';
+
+            window.location.href = "{{ url_for('editar_vendas') }}?ordenarVenda=" + campo + "&direcaoVenda=" + direcao;
+        }
+
+        document.getElementById('venda_crescente').addEventListener('change', aplicarOrdemAtual);
+        document.getElementById('venda_decrescente').addEventListener('change', aplicarOrdemAtual);
+
+        function aplicarOrdemAtual() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const campoAtual = urlParams.get('ordenarVenda') || 'id';
+
+            ordenarVendas(campoAtual);
+        }
+    </script>
+</body>
+</html>

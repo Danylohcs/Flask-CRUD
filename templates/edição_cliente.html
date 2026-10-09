@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Cliente #{{ cliente.id_cliente }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+    <div class="container my-5" style="max-width: 800px;">
+
+        <!-- Botão de Voltar -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 text-dark fw-bold">Editar Cliente #{{ cliente.id_cliente }}</h1>
+            <a href="{{ url_for('editar_clientes') }}" class="btn btn-outline-dark btn-sm">← Voltar</a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="POST">
+
+                    <!-- Nome -->
+                    <div class="mb-3">
+                        <label for="nomeClienteForm" class="form-label">Nome:</label>
+                        <input type="text" class="form-control" id="nomeClienteForm" name="nomeClienteForm" value="{{ cliente.nome_cliente }}" placeholder="Digite o nome do cliente" required>
+                    </div>
+
+                    <!-- E-mail -->
+                    <div class="mb-3">
+                        <label for="emailForm" class="form-label">E-mail:</label>
+                        <input type="email" class="form-control" id="emailForm" name="emailForm" value="{{ cliente.email }}" placeholder="exemplo@email.com" required>
+                    </div>
+
+                    <!-- Telefone -->
+                    <div class="mb-3">
+                        <label for="telefoneForm" class="form-label">Telefone:</label>
+                        <input type="text" class="form-control" id="telefoneForm" name="telefoneForm" value="{{ cliente.telefone }}" placeholder="(00) 00000-0000">
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a href="{{ url_for('editar_clientes') }}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
