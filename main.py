@@ -115,7 +115,7 @@ def registrar_venda():
 
 # ----------------------------------------------------------------------------------------------------------------
 
-# HUB Visualização de Dados
+# HUB Edição de Dados
 @app.route("/data_view")
 def editar_dados():
 
