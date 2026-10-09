@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Produto #{{ produto.id_produto }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+    <div class="container my-5" style="max-width: 800px;">
+
+        <!-- Botão de Voltar -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 text-dark fw-bold">Editar Produto #{{ produto.id_produto }}</h1>
+            <a href="{{ url_for('editar_produtos') }}" class="btn btn-outline-dark btn-sm">← Voltar</a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="POST">
+
+                    <!-- Nome -->
+                    <div class="mb-3 mt-4">
+                        <label for="nomeProdutoForm" class="form-label">Nome:</label>
+                        <input type="text" class="form-control" id="nomeProdutoForm" name="nomeProdutoForm" value="{{ produto.nome_produto }}" placeholder="Digite o nome do produto" required>
+                    </div>
+
+                    <!-- Preço -->
+                    <div class="mb-3">
+                        <label for="preçoProdutoForm" class="form-label">Preço</label>
+                        <input type="number" step="0.01" class="form-control" id="preçoProdutoForm" name="preçoProdutoForm" value="{{ produto.preco_produto }}" placeholder="XXX,XX" required>
+                    </div>
+
+                    <!-- Estoque -->
+                    <div class="mb-3">
+                        <label for="estoqueProdutoForm" class="form-label">Estoque:</label>
+                        <input type="number" class="form-control" id="estoqueProdutoForm" name="estoqueProdutoForm" value="{{ produto.estoque }}" placeholder="XX" required>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a href="{{ url_for('editar_produtos') }}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

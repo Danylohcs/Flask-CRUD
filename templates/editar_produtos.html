@@ -2,22 +2,23 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Listagem de Vendas</title>
+    <title>Edição de Produtos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
-<body>
-    <div class="container my-5">
+<body class="bg-light">
+    <div class="container my-5" style="max-width: 1000px;">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 text-dark fw-bold">Listagem de Produtos</h1>
-            <a href="{{ url_for('listar_dados') }}" class="btn btn-outline-dark btn-sm">← Voltar</a>
+            <h1 class="h3 text-dark fw-bold">Edição de Produtos</h1>
+            <a href="{{ url_for('editar_dados') }}" class="btn btn-outline-dark btn-sm">← Voltar</a>
         </div>
 
-        <!-- Produtos -->
-        <div class="card shadow-sm mb-4">
+        <!-- Card principal da tabela-->
+        <div class="card shadow-sm">
 
             <!-- Bloco de Título -->
             <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <h2 class="h5 mb-0">Produtos</h2>
+                <h2 class="h5 mb-0">Listagem de Produtos</h2>
 
                 <!-- Botões - Bloco de Título -->
                 <div class="d-flex align-items-center gap-2">
@@ -57,29 +58,41 @@
                 </div>
             </div>
 
-            <!-- Tabela de Exibição -->
+            <!-- Tabela de Produtos -->
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover mb-0 align-middle" style="border: 1px solid black;">
+                    <table class="table table-striped table-hover mb-0 align-middle">
                         <thead class="table-light">
                             <tr>
                                 <th>ID</th>
                                 <th>Produto</th>
                                 <th>Preço</th>
                                 <th>Estoque</th>
+                                <th class="text-center" style="width: 150px;">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for produto in produtos %}
                             <tr>
-                                <td>{{ produto.id_produto }}</td>
+                                <td>    {{ produto.id_produto }}</td>
                                 <td>{{ produto.nome_produto }}</td>
                                 <td>R$ {{ "%.2f"|format(produto.preco_produto) }}</td>
                                 <td>{{ produto.estoque }}</td>
+                                <td>
+                                    <!-- Botão Editar -->
+                                    <a href="{{ url_for('editar_produto_form', id=produto.id_produto) }}" class="btn btn-outline-primary btn-sm" title="Editar">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+
+                                    <!-- Botão Excluir -->
+                                    <a href="{{ url_for('excluir_produto', id=produto.id_produto) }}" class="btn btn-outline-danger btn-sm" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta venda?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
                             </tr>
                             {% else %}
                             <tr>
-                                <td colspan="4" class="text-center text-muted py-3">Nenhum produto registado.</td>
+                                <td colspan="4" class="text-center text-muted py-4">Nenhum produto registado.</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -89,7 +102,7 @@
         </div>
     </div>
 
-    <!-- Script do Bootstrap sem restrições de integridade -->
+    <!-- Script de Ordenação e Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
 
@@ -112,7 +125,7 @@
                 btnDropdown.textContent = 'Preço';
             } else if (campo === 'estoque') {
                 btnDropdown.textContent = 'Estoque';
-            } else if (campo === 'id') {
+            } else {
                 btnDropdown.textContent = 'ID';
             }
         });
@@ -121,7 +134,7 @@
             const decrescente = document.getElementById('produto_decrescente').checked;
             const direcao = decrescente ? 'desc' : 'asc'
 
-            window.location.href = "{{ url_for('listar_produtos') }}?ordenarProd=" + campo + "&direcaoProd=" + direcao;
+            window.location.href = "{{ url_for('editar_produtos') }}?ordenarProd=" + campo + "&direcaoProd=" + direcao;
         }
 
         document.getElementById('produto_crescente').addEventListener('change', aplicarOrdemAtual);

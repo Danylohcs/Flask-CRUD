@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Edição de Clientes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+    <div class="container my-5" style="max-width: 1000px;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 text-dark fw-bold">Edição de Clientes</h1>
+            <a href="{{ url_for('editar_dados') }}" class="btn btn-outline-dark btn-sm">← Voltar</a>
+        </div>
+
+        <!-- Card principal da tabela-->
+        <div class="card shadow-sm">
+
+            <!-- Bloco de Título -->
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <h2 class="h5 mb-0">Listagem de Clientes</h2>
+
+                <!-- Botões - Bloco de Título -->
+                <div class="d-flex align-items-center gap-2">
+
+                    <div class="d-flex flex-column">
+                        <label class="form-label text-white fw-bold mb-1" style="font-size: 0.8rem;">Ordenar por:</label>
+
+                        <!-- Dropdown - Ordenar por -->
+                        <div class="dropdown">
+                            <!-- ID corrigido para btnDropdownClientes -->
+                            <button class="btn btn-sm btn-primary dropdown-toggle d-flex justify-content-between align-items-center w-100" type="button" id="btnDropdownClientes" data-bs-toggle="dropdown" aria-expanded="false" style="min-width: 110px; text-align: left;">
+                                ID
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="btnDropdownClientes">
+                                <li><a class="dropdown-item" href="#" onclick="ordenarClientes('id')">ID</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="ordenarClientes('nome')">Cliente</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Button Toggle - Crescente/Decrescente -->
+                    <div class="d-flex flex-column">
+                        <label class="form-label text-white fw-bold mb-1" style="font-size: 0.8rem;">Sentido:</label>
+
+                        <!-- Botão -->
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+
+                            <input type="radio" class="btn-check" name="ordem_cliente" id="cliente_crescente" autocomplete="off" checked>
+                            <label class="btn btn-outline-primary" for="cliente_crescente">Crescente</label>
+
+                            <input type="radio" class="btn-check" name="ordem_cliente" id="cliente_decrescente" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="cliente_decrescente">Decrescente</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Clientes -->
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0 align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>E-mail</th>
+                                <th>Telefone</th>
+                                <th class="text-center" style="width: 150px;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cliente in clientes %}
+                            <tr>
+                                <td>{{ cliente.id_cliente }}</td>
+                                <td>{{ cliente.nome_cliente }}</td>
+                                <td>{{ cliente.email }}</td>
+                                <td>{{ cliente.telefone}}</td>
+                                <td>
+                                    <!-- Botão Editar -->
+                                    <a href="{{ url_for('editar_cliente_form', id=cliente.id_cliente) }}" class="btn btn-outline-primary btn-sm" title="Editar">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+
+                                    <!-- Botão Excluir -->
+                                    <a href="{{ url_for('excluir_cliente', id=cliente.id_cliente) }}" class="btn btn-outline-danger btn-sm" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta venda?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">Nenhum cliente registado.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de Ordenação e Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const direcao = urlParams.get('direcaoCli');
+        const campo = urlParams.get('ordenarCli');
+
+        // Mantém o rádio correto selecionado ao recarregar a página
+        if (direcao === 'desc') {
+            document.getElementById('cliente_decrescente').checked = true;
+        } else {
+            document.getElementById('cliente_crescente').checked = true;
+        }
+
+        // Atualiza o texto do botão do dropdown com base no filtro ativo
+        const btnDropdown = document.getElementById('btnDropdownClientes');
+        if (campo === 'nome') {
+            btnDropdown.textContent = 'Cliente';
+        } else {
+            btnDropdown.textContent = 'ID';
+        }
+    });
+
+    function ordenarClientes(campo) {
+        const decrescente = document.getElementById('cliente_decrescente').checked;
+        const direcao = decrescente ? 'desc' : 'asc';
+
+        // Envia os parâmetros exatos (?ordenarCli=...&direcaoCli=...) que o teu main.py espera
+        window.location.href = "{{ url_for('editar_clientes') }}?ordenarCli=" + campo + "&direcaoCli=" + direcao;
+    }
+
+    document.getElementById('cliente_crescente').addEventListener('change', aplicarOrdemClienteAtual);
+    document.getElementById('cliente_decrescente').addEventListener('change', aplicarOrdemClienteAtual);
+
+    function aplicarOrdemClienteAtual() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const campoAtual = urlParams.get('ordenarCli') || 'id';
+        ordenarClientes(campoAtual);
+    }
+    </script>
+</body>
+</html>
