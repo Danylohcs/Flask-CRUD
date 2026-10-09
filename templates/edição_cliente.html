@@ -34,7 +34,7 @@
                     <!-- Telefone -->
                     <div class="mb-3">
                         <label for="telefoneForm" class="form-label">Telefone:</label>
-                        <input type="text" class="form-control" id="telefoneForm" name="telefoneForm" value="{{ cliente.telefone }}" placeholder="(00) 00000-0000">
+                        <input type="text" class="form-control" inputmode="numeric" pattern="[0-9\s\(\)\-]+" title="Digite apenas números." id="telefoneForm" name="telefoneForm" value="{{ cliente.telefone }}" placeholder="(XX) XXXXX-XXXX)">
                     </div>
 
                     <div class="d-flex justify-content-end gap-2 mt-4">

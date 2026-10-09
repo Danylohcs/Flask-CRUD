@@ -1,4 +1,5 @@
 from db import db
+from sqlalchemy.orm import validates
 
 class Clientes(db.Model):
     __tablename__ = 'Clientes'
@@ -7,6 +8,14 @@ class Clientes(db.Model):
     nome_cliente = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(100))
     telefone = db.Column(db.String(20))
+
+    @validates('telefone')
+    def validate_telefone(self, key, telefone):
+        if telefone:
+            # Remove parênteses, espaços, hífens e guarda apenas os números
+            telefone_limpo = "".join(filter(str.isdigit, telefone))
+            return telefone_limpo
+        return telefone
 
 class Produtos(db.Model):
     __tablename__ = 'Produtos'
